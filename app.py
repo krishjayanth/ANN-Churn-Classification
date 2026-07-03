@@ -5,9 +5,6 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder
 import pandas as pd
 import pickle
 
-# Load the trained model
-model = tf.keras.models.load_model('model.keras')
-
 st.write("Python:", sys.version)
 st.write("TensorFlow:", tf.__version__)
 
@@ -15,6 +12,9 @@ try:
     st.write("tf.keras:", tf.keras.__version__)
 except Exception as e:
     st.write("tf.keras version error:", e)
+    
+# Load the trained model
+model = tf.keras.models.load_model('model.keras')
 
 # Load the encoders and scaler
 with open('label_encoder_gender.pkl', 'rb') as file:
