@@ -2,20 +2,29 @@ import streamlit as st
 import numpy as np
 import tensorflow as tf
 import sys
+import os
+import zipfile
 from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder
 import pandas as pd
 import pickle
 
-st.write("Python:", sys.version)
-st.write("TensorFlow:", tf.__version__)
+st.write("Current directory:", os.getcwd())
+st.write("Files:", os.listdir("."))
 
-try:
-    st.write("tf.keras:", tf.keras.__version__)
-except Exception as e:
-    st.write("tf.keras version error:", e)
+st.write("model.keras exists:", os.path.exists("model.keras"))
+
+if os.path.exists("model.keras"):
+    st.write("Size:", os.path.getsize("model.keras"))
+
+    with zipfile.ZipFile("model.keras") as z:
+        st.write("Contents:", z.namelist())
 
 # Load the trained model
-model = tf.keras.models.load_model('model.keras')
+model = tf.keras.models.load_model(
+    "model.keras",
+    compile=False,
+    safe_mode=False
+)
 
 # Load the encoders and scaler
 with open('label_encoder_gender.pkl', 'rb') as file:
