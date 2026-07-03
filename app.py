@@ -20,11 +20,7 @@ if os.path.exists("model.keras"):
         st.write("Contents:", z.namelist())
 
 # Load the trained model
-model = tf.keras.models.load_model(
-    "model.keras",
-    compile=False,
-    safe_mode=False
-)
+model = tf.keras.models.load_model("model.h5")
 
 # Load the encoders and scaler
 with open('label_encoder_gender.pkl', 'rb') as file:
