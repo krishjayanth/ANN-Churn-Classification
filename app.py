@@ -8,19 +8,8 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder
 import pandas as pd
 import pickle
 
-st.write("Current directory:", os.getcwd())
-st.write("Files:", os.listdir("."))
-
-st.write("model.keras exists:", os.path.exists("model.keras"))
-
-if os.path.exists("model.keras"):
-    st.write("Size:", os.path.getsize("model.keras"))
-
-    with zipfile.ZipFile("model.keras") as z:
-        st.write("Contents:", z.namelist())
-
 # Load the trained model
-model = tf.keras.models.load_model("model.h5")
+model = tf.keras.models.load_model("model.keras")
 
 # Load the encoders and scaler
 with open('label_encoder_gender.pkl', 'rb') as file:
