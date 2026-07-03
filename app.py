@@ -13,94 +13,67 @@ st.set_page_config(
 # ---------------------------- Styling ----------------------------
 st.markdown("""
 <style>
-    /* Header banner */
-    .hero {
-        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 60%, #60a5fa 100%);
-        border-radius: 16px;
-        padding: 2.2rem 2rem;
-        margin-bottom: 1.5rem;
+    /* Predict button: solid color, no effects */
+    div.stButton > button {
+        background: #1e3a8a;
         color: white;
-    }
-    .hero h1 {
-        margin: 0;
-        font-size: 2rem;
-        font-weight: 700;
-        color: white;
-    }
-    .hero p {
-        margin: 0.4rem 0 0 0;
-        opacity: 0.85;
+        border: none;
+        border-radius: 8px;
+        padding: 0.7rem 1rem;
+        font-weight: 600;
         font-size: 1rem;
+        width: 100%;
+    }
+    div.stButton > button:hover {
+        background: #172f70;
+        color: white;
     }
 
-    /* Section labels */
-    .section-label {
-        font-size: 0.8rem;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: #3b82f6;
-        margin: 0.5rem 0 0.25rem 0;
-    }
-
-    /* Result cards */
-    .result-card {
-        border-radius: 16px;
-        padding: 1.8rem 2rem;
+    /* Result panel */
+    .result {
+        border-radius: 8px;
+        padding: 1.5rem 1.75rem;
         margin-top: 1rem;
-        color: white;
     }
-    .result-card.churn {
-        background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%);
+    .result.churn {
+        background: #fdeaea;
+        color: #7f1d1d;
     }
-    .result-card.stay {
-        background: linear-gradient(135deg, #14532d 0%, #16a34a 100%);
+    .result.stay {
+        background: #e5f4ea;
+        color: #14532d;
     }
-    .result-card h2 {
-        margin: 0 0 0.3rem 0;
-        font-size: 1.4rem;
-        color: white;
+    .result h2 {
+        margin: 0 0 0.25rem 0;
+        font-size: 1.3rem;
+        color: inherit;
     }
-    .result-card p {
+    .result .prob {
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-top: 0.75rem;
+    }
+    .result p {
         margin: 0;
-        opacity: 0.9;
-    }
-    .prob-number {
-        font-size: 3rem;
-        font-weight: 800;
-        line-height: 1;
+        color: inherit;
     }
 
     /* Probability meter */
     .meter {
-        background: rgba(255,255,255,0.25);
-        border-radius: 99px;
-        height: 12px;
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+        height: 10px;
         margin-top: 1rem;
         overflow: hidden;
     }
-    .meter-fill {
-        background: white;
+    .result.churn .meter-fill {
+        background: #b91c1c;
         height: 100%;
-        border-radius: 99px;
     }
-
-    /* Predict button */
-    div.stButton > button {
-        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-        color: white;
-        border: none;
-        border-radius: 10px;
-        padding: 0.7rem 1rem;
-        font-weight: 700;
-        font-size: 1.05rem;
-        width: 100%;
-        transition: all 0.2s ease;
-    }
-    div.stButton > button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 18px rgba(59, 130, 246, 0.4);
-        color: white;
+    .result.stay .meter-fill {
+        background: #15803d;
+        height: 100%;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -122,15 +95,12 @@ def load_artifacts():
 model, label_encoder_gender, onehot_encoder_geo, scaler = load_artifacts()
 
 # ---------------------------- Header ----------------------------
-st.markdown("""
-<div class="hero">
-    <h1>Customer Churn Prediction</h1>
-    <p>Enter a customer's profile below and the neural network will estimate how likely they are to leave the bank.</p>
-</div>
-""", unsafe_allow_html=True)
+st.title('Customer Churn Prediction')
+st.write("Enter a customer's profile and the model will estimate how likely they are to leave the bank.")
+st.divider()
 
 # ---------------------------- Inputs ----------------------------
-st.markdown('<div class="section-label">Customer Profile</div>', unsafe_allow_html=True)
+st.subheader('Customer profile')
 col1, col2, col3 = st.columns(3)
 with col1:
     geography = st.selectbox('Geography', onehot_encoder_geo.categories_[0])
@@ -139,7 +109,7 @@ with col2:
 with col3:
     age = st.slider('Age', 18, 92, 38)
 
-st.markdown('<div class="section-label">Financials</div>', unsafe_allow_html=True)
+st.subheader('Financials')
 col4, col5, col6 = st.columns(3)
 with col4:
     credit_score = st.number_input('Credit Score', min_value=300, max_value=900, value=650, step=1)
@@ -148,7 +118,7 @@ with col5:
 with col6:
     estimated_salary = st.number_input('Estimated Salary ($)', min_value=0.0, value=100000.0, step=1000.0, format="%.2f")
 
-st.markdown('<div class="section-label">Relationship with the Bank</div>', unsafe_allow_html=True)
+st.subheader('Relationship with the bank')
 col7, col8 = st.columns(2)
 with col7:
     tenure = st.slider('Tenure (years)', 0, 10, 5)
@@ -190,20 +160,20 @@ if predict_clicked:
 
     if prediction_proba > 0.5:
         st.markdown(f"""
-        <div class="result-card churn">
-            <h2>Likely to Churn</h2>
+        <div class="result churn">
+            <h2>Likely to churn</h2>
             <p>This customer shows a high risk of leaving. Consider retention outreach.</p>
-            <div class="prob-number">{prediction_proba:.0%}</div>
+            <div class="prob">{prediction_proba:.0%}</div>
             <p>churn probability</p>
             <div class="meter"><div class="meter-fill" style="width: {prediction_proba:.0%};"></div></div>
         </div>
         """, unsafe_allow_html=True)
     else:
         st.markdown(f"""
-        <div class="result-card stay">
-            <h2>Likely to Stay</h2>
-            <p>This customer appears loyal. Low churn risk detected.</p>
-            <div class="prob-number">{prediction_proba:.0%}</div>
+        <div class="result stay">
+            <h2>Likely to stay</h2>
+            <p>This customer appears loyal. Low churn risk.</p>
+            <div class="prob">{prediction_proba:.0%}</div>
             <p>churn probability</p>
             <div class="meter"><div class="meter-fill" style="width: {prediction_proba:.0%};"></div></div>
         </div>
