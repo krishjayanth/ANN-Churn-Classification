@@ -1,6 +1,10 @@
 import streamlit as st
 import numpy as np
 import tensorflow as tf
+
+st.write("TensorFlow:", tf.__version__)
+st.write("Keras:", keras.__version__)
+
 from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder
 import pandas as pd
 import pickle
