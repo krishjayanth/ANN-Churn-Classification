@@ -1,0 +1,10 @@
+# Pins the "Quiet Ledger" light theme (see DESIGN.md) so the app renders the
+# same white, flat, color-only-for-meaning system on every host, regardless of
+# the viewer's OS/browser dark-mode preference.
+[theme]
+base = "light"
+primaryColor = "#1e3a8a"          # Ledger Navy — the single interaction accent
+backgroundColor = "#ffffff"        # Surface: white page
+secondaryBackgroundColor = "#f4f5f7"  # Subtle cool neutral for input fills
+textColor = "#31333f"              # Ink
+font = "sans serif"                # Source Sans Pro
