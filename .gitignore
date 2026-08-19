@@ -1,2 +1,18 @@
-venv
+.venv
 .vscode
+
+# Python
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# TensorBoard logs
+logs/
+
+# Model artifacts
+*.pkl
+
+# OS files
+.DS_Store
